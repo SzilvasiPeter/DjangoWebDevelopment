@@ -29,7 +29,7 @@
             <!-- Navbar Right Side -->
             <div class="navbar-nav pr-5">
                 {% if user.is_superuser %}
-                    <a class="nav-item nav-link" href="{% url 'video-rented' %}">New Video</a>
+                    <a class="nav-item nav-link" href="{% url 'video-create' %}">New Video</a>
                 {% endif %}
                 {% if user.is_authenticated %}
                     <a class="nav-item nav-link" href="{% url 'video-rented' %}">Profile</a>

@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -15,15 +16,6 @@ class AdminStaffRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
 
     def test_func(self):
         return self.request.user.is_superuser or self.request.user.is_staff
-
-
-class SimpleUserRequiredMixin(LoginRequiredMixin, UserPassesTestMixin):
-
-    def test_func(self):
-        video = self.get_object()
-        if self.request.user == video.renter:
-            return True
-        return False
 
 
 class VideoListView(ListView):
@@ -73,12 +65,40 @@ class VideoCreateView(AdminStaffRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class VideoUpdateView(SimpleUserRequiredMixin, UpdateView):
+class VideoUpdateView(AdminStaffRequiredMixin, UpdateView):
     model = Video
     fields = ['title', 'genre', 'duration']
 
     def form_valid(self, form):
         form.instance.renter = self.request.user
+        return super().form_valid(form)
+
+
+from django.forms import ModelForm, HiddenInput
+
+
+class HiddenForm(ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(HiddenForm, self).__init__(*args, **kwargs)
+        self.fields['renter'].widget = HiddenInput()
+
+    class Meta:
+        fields = ('renter', )
+        model = Video
+
+
+class VideoRentView(LoginRequiredMixin, UpdateView):
+    model = Video
+    template_name = 'video/video_rent.html'
+    form_class = HiddenForm
+    success_url = '/'
+
+    def form_valid(self, form):
+        if form.instance.renter == self.request.user:
+            admin_user = User.objects.get(id=1)
+            form.instance.renter = admin_user
+        else:
+            form.instance.renter = self.request.user
         return super().form_valid(form)
 
 
