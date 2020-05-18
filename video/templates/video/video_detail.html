@@ -1,0 +1,23 @@
+{% extends "video/base.html" %}
+{% block content %}
+    <article class="media content-section">
+{#    TODO: Video image here #}
+    <div class="media-body">
+      <div class="article-metadata">
+        <a class="mr-2" href="#">{{ object.renter }}</a>
+        <small class="text-muted">{{ object.receive_date|date:"Y F d" }}</small>
+        {% if object.renter == user %}
+          <div>
+            <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'video-update' object.id %}">Update</a>
+            {% if user.is_superuser %}
+                <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'video-delete' object.id %}">Delete</a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+        <h2 class="article-title">{{ object.title }}</h2>
+        <p class="article-content">Genre: {{ object.genre }}</p>
+        <p class="article-content">Duration {{ object.duration }} minutes</p>
+    </div>
+  </article>
+{% endblock content %}

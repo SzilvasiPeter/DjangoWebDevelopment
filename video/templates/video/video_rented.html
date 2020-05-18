@@ -2,12 +2,13 @@
 {% block content %}
     <div class="row">
         <div class="col-md-9">
-            {% for video in videos %}
+            {% for video in rented_videos %}
                 <div class="card-body">
                     <article class="media content-section">
 {#                      TODO: Video image here#}
                       <div class="media-body">
                         <div class="article-metadata">
+                          <a class="mr-2" href="#">{{ video.renter }}</a>
                           <small class="text-muted">{{ video.receive_date|date:"Y F d" }}</small>
                         </div>
                         <h2><a class="article-title" href="{% url 'video-detail' video.id %}">{{ video.title }}</a></h2>
@@ -17,16 +18,6 @@
                     </article>
                 </div>
             {% endfor %}
-        </div>
-        <div class="col-md-3">
-          <div class="content-section">
-            <h3>Rented Videos</h3>
-                  <ul class="list-group">
-                    {% for rented_video in rented_videos %}
-                        <li class="list-group-item list-group-item-light">{{ rented_video.title }}</li>
-                    {% endfor %}
-                  </ul>
-          </div>
         </div>
     </div>
 {% endblock content %}
