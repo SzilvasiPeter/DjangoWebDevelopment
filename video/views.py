@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.forms import ModelForm, HiddenInput
 from django.shortcuts import render
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
@@ -72,9 +73,6 @@ class VideoUpdateView(AdminStaffRequiredMixin, UpdateView):
     def form_valid(self, form):
         form.instance.renter = self.request.user
         return super().form_valid(form)
-
-
-from django.forms import ModelForm, HiddenInput
 
 
 class HiddenForm(ModelForm):
